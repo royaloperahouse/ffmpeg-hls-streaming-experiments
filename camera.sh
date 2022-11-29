@@ -1,4 +1,6 @@
-rm -rf *.ts;
+# clear up old output files and start generating an HLS capture from an attached camera
+
+rm -rf *.ts
 rm -rf *.m3u8
 ffmpeg -f avfoundation -framerate 30 -video_size 640x360 -i "0:3" -c:v libx264 -crf 21 -preset veryfast \
     -c:a aac -b:a 128k -ac 2 \
