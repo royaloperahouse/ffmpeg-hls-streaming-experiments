@@ -1,6 +1,7 @@
 # Streaming HLS to S3 with FFmpeg
 
-Experiments with FFmpeg and S3 for faking our Ateme Titan + [AWS MediaPackage](https://aws.amazon.com/mediapackage/)
+Experiments with FFmpeg and S3 for faking our Ateme Titan +
+[AWS MediaPackage](https://aws.amazon.com/mediapackage/)
 
 ## Dependencies
 
@@ -10,7 +11,9 @@ Experiments with FFmpeg and S3 for faking our Ateme Titan + [AWS MediaPackage](h
 
 Show available video and audio devices:
 
-`ffmpeg -f avfoundation -list_devices true -i ""` (note `avfoundation` is for Mac OS - see [alternatives for Linux and Windows](https://trac.ffmpeg.org/wiki/Capture/Webcam))
+`ffmpeg -f avfoundation -list_devices true -i ""` (note `avfoundation` is for
+Mac OS - see
+[alternatives for Linux and Windows](https://trac.ffmpeg.org/wiki/Capture/Webcam))
 
 Example output:
 
@@ -28,7 +31,8 @@ Example output:
 [AVFoundation indev @ 0x154605d80] [4] Microsoft Teams Audio
 ```
 
-Capture the first video input (HD Pro Webcam C920) and the Rode mic, with set video size, to a file:
+Capture the first video input (HD Pro Webcam C920) and the Rode mic, with set
+video size, to a file:
 
 `ffmpeg -f avfoundation -framerate 30 -video_size 640x480 -i "0:3" out.avi`
 
@@ -40,10 +44,17 @@ ffmpeg -f avfoundation -framerate 30 -video_size 640x360 -i "0:3" -c:v libx264 -
     -f hls -hls_time 4 -hls_playlist_type event stream.m3u8
 ```
 
-Or output top left bit of screen as HLS:
+or output top left bit of screen as HLS:
 
 ```sh
 ffmpeg -f avfoundation -r 30 -i "3:3" -vf "crop=640:360:0:0" -pix_fmt yuv420p \
+    -f hls -hls_time 4 -hls_playlist_type event stream.m3u8
+```
+
+or use FFmpeg's test source (with `-re` to generate in real time):
+
+```
+ffmpeg -f lavfi -re -i testsrc -pix_fmt yuv420p \
     -f hls -hls_time 4 -hls_playlist_type event stream.m3u8
 ```
 
